@@ -1,0 +1,7 @@
+# tri-sages bundle patch：声明插件自己的 loader 条目，
+# 供 `dsh plugin --profile web add <本目录>` 安装时使用。
+# 本地挂载（不装成包）时，直接把下面这条 insert 抄进 profile 的 cordis.patch.yml，
+# 并把 name 改成相对 profile 的路径： ./tri-sages/index.mjs
+- insert:
+    - id: tri-sages
+      name: 'tri-sages'

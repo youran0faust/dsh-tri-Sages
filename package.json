@@ -1,0 +1,51 @@
+{
+  "name": "tri-sages",
+  "version": "0.2.1",
+  "private": true,
+  "description": "三贤人：三份自我（少女/成女/熟女）对同一件事各自下判断，必须选边，赞成要负举证责任，再计票。",
+  "type": "module",
+  "main": "index.mjs",
+  "exports": {
+    ".": "./index.mjs",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "dsh": ">=0.2.0-rc.1",
+    "node": ">=20.0.0"
+  },
+  "dsh": {
+    "runtime": "host",
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "command.mjs",
+    "lib",
+    "personas",
+    "cordis.patch.yml",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node test/tally.test.mjs && node test/parse.test.mjs && node test/ledger.test.mjs && node test/pipeline.test.mjs && node test/plugin.test.mjs && node test/command.test.mjs",
+    "test:offline": "node test/tally.test.mjs && node test/parse.test.mjs && node test/ledger.test.mjs && node test/pipeline.test.mjs && node test/command.test.mjs"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/youran0faust/dsh-tri-Sages.git"
+  },
+  "homepage": "https://github.com/youran0faust/dsh-tri-Sages",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "multi-agent",
+    "llm-judgment",
+    "decision-support"
+  ]
+}
+

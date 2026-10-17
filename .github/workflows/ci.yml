@@ -1,0 +1,24 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      # 只跑"离线测试"：不依赖宿主 DSH。
+      # 注意 test/plugin.test.mjs 需要本机 DSH 安装（它要解析 @deepseek-ai/dsh-tools），
+      # 在 CI 上必然失败，因此被排除在这里，只能在装了 DSH 的机器上跑。
+      - name: Offline tests (no DSH host required)
+        run: npm run test:offline
+      - name: Syntax check
+        run: |
+          node --check index.mjs
+          node --check command.mjs
+          for f in lib/*.mjs tools/*.mjs; do node --check "$f"; done
