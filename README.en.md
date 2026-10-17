@@ -1,6 +1,6 @@
 # Tri-Sages · 三贤人
 
-[![CI](https://github.com/youran0faust/dsh-tri-Sages/actions/workflows/ci.yml/badge.svg)](https://github.com/youran0faust/dsh-tri-Sages/actions/workflows/ci.yml) ![node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
+[![CI](https://github.com/youran0faust/dsh-tri-Sages/actions/workflows/ci.yml/badge.svg)](https://github.com/youran0faust/dsh-tri-Sages/actions/workflows/ci.yml) ![node](https://img.shields.io/badge/node-%3E%3D20-brightgreen) [![version](https://img.shields.io/badge/version-v0.2.1-blue)](https://github.com/youran0faust/dsh-tri-Sages/releases/tag/v0.2.1)
 
 > **Ask the same thing twice and it gives you two answers — and never tells you.**
 
