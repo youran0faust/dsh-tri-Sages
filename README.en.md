@@ -58,6 +58,16 @@ Two entry points once installed:
 
 > ⚠️ **Code changes need a restart; persona and contract changes do not.** The loader's live reload re-runs `apply` but does not hot-swap ESM modules. That is why every ledger record carries `pluginVersion` and every report prints `engine: tri-sages vX.Y.Z` — so you can tell **which version actually ran**.
 
+## Project layout
+
+| Path | Contents |
+|---|---|
+| `index.mjs` / `command.mjs` | plugin entry (the three tools) and the slash-command entry |
+| `lib/` | tally, persona loading, prompt assembly, model bridge, output parsing, ledger, rendering, offline stub, module resolution |
+| `personas/` | the three personas + the shared output contract (external Markdown, read on every vote) |
+| `test/` | 54 tests, including the mount test through the host's real tool API |
+| `tools/` | patch validation, model probe |
+| `refs/` | experiment material: answer key, measurement report, redacted ledger |
 ## Reliability and measurements
 
 - **54 automated tests green** (`npm test`). 46 of them need no DSH host and run in CI via `npm run test:offline`; the remaining 8 are `test/plugin.test.mjs` — the step local plugins most often die on: it mounts the plugin through the host's **real tool-definition API** and actually calls all three tools.
