@@ -1,51 +1,45 @@
-# Tri-Sages (三贤人)
+# Tri-Sages · 三贤人
 
-**Three selves judge the same question independently — blind to one another, and they must take sides.**
+[![license](https://img.shields.io/badge/license-MIT-brightgreen)](LICENSE) [![version](https://img.shields.io/badge/version-v0.1.0-blue)](https://github.com/youran0faust/dsh-tri-Sages/releases/tag/v0.1.0) [![DSH](https://img.shields.io/badge/DSH-0.2.0--rc.2-4B6BFB)](.) [![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-0078D6)](.) [![tests](https://img.shields.io/badge/tests-54%20green-3FB950)](.)
 
-A DeepSeek Harness plugin for decisions you cannot take back.
+> **One decision you dare not make alone, in — three mutually blind verdicts that must take sides, out.**
 
-| Unit | Which self | The one question she asks |
+Tri-Sages turns "a decision you dare not make alone" into **three verdicts that refuse to agree**: three persona units judge independently and blind to one another, **must take a side**, and an approving vote must state *what observation would refute it*. Votes are then tallied by rule, and every reason — including every dissent — is kept **verbatim**. It is a DeepSeek Harness (DSH) plugin, with 54 automated tests and a controlled case study on *The Case of the Speluncean Explorers*.
+
+> [中文](README.md) | English · MIT
+
+## What it solves
+
+Ask a large model to help you decide and it fails in two structural ways — and both failures land hardest on decisions you cannot take back. It **fudges** (a flawless two-sided answer that leaves you exactly where you were), or it becomes a **wishing machine** (it tells you what you want to hear). More fundamentally, **a single model's judgment cannot vouch for itself**: ask the same question twice and you may get two answers, with no signal that anything changed.
+
+Tri-Sages answers by writing the discipline into the mechanism rather than into the goodwill of a prompt:
+
+| Pain | What Tri-Sages does |
+|---|---|
+| Fudging: you read it and stay put | **Take a side** — the verdict is approve or reject, with **no abstention**; if the matter falls outside your domain, still judge, and put your uncertainty in the caveats |
+| Wishing machine: it tells you what you want | **Approval carries the burden of proof** — an approving vote must state *what observation would refute it*; without that, the system **records it as a rejection** |
+| A single judgment cannot vouch for itself | **Unanimity plus a self-reported engine** — critical matters need all three, any rejection vetoes; every record carries the engine version and persona hashes |
+| The conclusion is not auditable | **Dissent archived verbatim** — minority reasons are stored as written, never summarized, never overwritten |
+| A deadlock stalls with nobody accountable | **A downgrade must be signed** — only the eldest is asked once more, and only she can sign it into a majority; power moves and it leaves a name |
+| The persona is a black box | **Personas and contract are external Markdown** — read on every vote, so an edit takes effect on the next vote, no restart |
+
+## The three units
+
+| Unit | Which self she is | The one question she asks |
 | --- | --- | --- |
 | Maiden · Gold | nothing done yet | **can** this work at all? |
 | Matron · Frankincense | mid-career | can it **be done** — and who pays? |
 | Crone · Myrrh | too much done already | what is left **in thirty years**? |
 
-Only one of the three gifts was for the living; the other two are burned at funerals. So the unit that speaks for the people still alive is **structurally the minority**.
+Only one of the three gifts was for the living; the other two are burned at funerals. So the unit that speaks for **the people still alive is structurally the minority**.
 
-## The rules (four, no more)
+Each unit also carries a **self-check** that can flip her own approval into a rejection. The Crone's, for instance: *"shrink the time horizon to one generation — does this judgment still hold?"*
 
-1. **Take a side. No abstention.** If the matter falls outside your domain, still judge — and put your uncertainty in `caveats`.
-2. **Approval carries the burden of proof.** An approving vote must state *what observation would refute it*. If it cannot, the vote is **recorded as a rejection**.
-3. **Daily matters: majority. Critical matters: unanimity** — any single rejection vetoes.
-4. **Deadlock downgrade.** When a critical matter fails unanimity, only the eldest is asked once more; she may sign it into a majority vote. *Every failure to agree moves power one notch toward the eldest.*
-5. **Dissent is archived.** Votes that ran against the final outcome keep their reasons verbatim — never summarized, never overwritten.
+## Quick start
 
-Each unit also carries a **self-check** that can flip her own approval into a rejection. The Crone's, for instance: *"shrink the time horizon to one generation — does my judgment still hold?"*
+Requires DSH `0.2.0-rc.2` (declared in `peerDependencies`).
 
-## Tools
-
-| Tool | Purpose |
-| --- | --- |
-| `sages_vote(question, context?, criticality?, label?)` | run a vote; returns tallies, verdict, all three raw opinions, ledger id |
-| `sages_history(limit?, key?)` | read the ledger; `key` accepts an id (`ts-000003`) or a label |
-| `sages_personas(action?, unit?)` | show the active personas (sha256 / size), or dump one in full |
-
-Verdicts: `APPROVED` / `REJECTED` / `VETO`. If all three units fail to answer, the vote is `ERROR` — **no verdict is fabricated**.
-
-## Personas are external files, read on every vote
-
-```
-personas/maiden.md     Maiden · Gold
-personas/matron.md     Matron · Frankincense
-personas/crone.md      Crone · Myrrh
-personas/contract.md   the shared output contract
-```
-
-Edit a file and the **next vote** uses it — no restart. Every vote records the sha256 of all four.
-
-## Install
-
-Local mount (how this repo was developed): copy the directory into your profile and add to the profile's `cordis.patch.yml`:
+**A. Local mount** — copy this directory into your profile and add to the profile's `cordis.patch.yml`:
 
 ```yaml
 - insert:
@@ -55,41 +49,36 @@ Local mount (how this repo was developed): copy the directory into your profile 
         llmMode: live
 ```
 
-Or as a package: `dsh plugin --profile <name> add <path-to-this-dir>`.
+**B. As a package**: `dsh plugin --profile <name> add <path-to-this-dir>`
 
-> **Code changes need a restart; persona and contract changes do not.** The loader's live reload re-runs `apply` but does not hot-swap ESM modules. That is why every ledger record carries `pluginVersion` and every report prints `engine: tri-sages vX.Y.Z` — so you can tell which version actually ran.
+Two entry points once installed:
 
-## Config
+- **Slash command (for humans)**: `/sages should we drop the old table` ｜ `/sages critical …` ｜ `/sages history` ｜ `/sages personas` ｜ `/sages help`
+- **Tools (for the model)**: `sages_vote(question, context?, criticality?, label?)` ｜ `sages_history(limit?, key?)` ｜ `sages_personas(action?, unit?)`
 
-| Field | Default | Notes |
-| --- | --- | --- |
-| `provider` / `model` | `''` | empty = use the session default model |
-| `personasDir` | `''` | empty = the bundled `personas/` |
-| `ledgerDir` | `''` | empty = `<DSH_HOME>/tri-sages` |
-| `historyLimit` | `50` | |
-| `criticalKeywords` | built-in list | a hit escalates the matter to `critical` |
-| `timeoutMs` / `maxTokens` / `temperature` | `120000` / `2200` / `0.7` | |
-| `llmMode` | `live` | `stub` = offline, deterministic, free |
-| `stubPreset` | `split` | `split` / `unanimous` / `downgrade` / `no-falsifier` |
+> ⚠️ **Code changes need a restart; persona and contract changes do not.** The loader's live reload re-runs `apply` but does not hot-swap ESM modules. That is why every ledger record carries `pluginVersion` and every report prints `engine: tri-sages vX.Y.Z` — so you can tell **which version actually ran**.
 
-## Tests
+## Reliability and measurements
 
-```bash
-npm run test:offline   # 46 tests, no DSH host required
-npm test               # 54 tests; the extra 8 mount the plugin with the real host tool API
-```
+- **54 automated tests green** (`npm test`). 46 of them need no DSH host and run in CI via `npm run test:offline`; the remaining 8 are `test/plugin.test.mjs` — the step local plugins most often die on: it mounts the plugin through the host's **real tool-definition API** and actually calls all three tools.
+- **Offline stub** (`llmMode: stub` — no network, no cost) deterministically reproduces all four rule paths: majority, unanimity, **deadlock refused**, **deadlock downgraded**, and **the burden of proof turning an approval into a rejection** (3:0 becomes 2:1).
+- **Change discipline**: snapshot and rollback backup before every change; pilot then full run; reports and the raw ledger kept in separate layers.
+- **Measurements**: *The Case of the Speluncean Explorers* (Fuller 1949 + Suber 1998) was used as a measuring instrument across several rounds on the same six propositions, cross-checked against **14 human judicial positions** (6 convict : 6 acquit : 2 withdraw). The verdicts held, and the system proved **structurally conservative** — traceable to the choice of its three axes, which in turn surfaced and fixed two real defects. See [refs/](refs/README.md).
 
-`test/plugin.test.mjs` is the first line of defence: it proves the plugin **actually mounts**, including resolving `@deepseek-ai/dsh-tools` from the DSH installation — the step local plugins most often die on.
+## Limitations (honest notes)
 
-## What is in `refs/`
+- **The three units share one set of weights.** "Independent" means independent *personas*, not independent parameters. This is the project's most important limitation, and the next step is to train one adapter per self.
+- **A single run is not a conclusion.** Byte-identical inputs have produced different tallies; re-run before treating a result as a judgment.
+- **The instrument drifts.** The same `provider/model` name can be served by a different backend. In testing, the output-contract violation rate went from 2% to 33% and latency collapsed from 46–92 s to 17–22 s, which invalidated an entire round. **Before any cross-time comparison, verify the model is still the same one.**
+- **Failures are handled conservatively.** When a unit does not answer, its vote is recorded as a rejection (safety first). The report says so at the top (`⚠ answered: N/3`) and the ledger keeps that unit's raw output.
+- **This is not legal or medical advice.** The Speluncean case is a **measuring instrument** here, not something to be judged correctly.
 
-Experiment material, not plugin code: a verified answer key for *The Case of the Speluncean Explorers* (Fuller 1949 + Suber 1998), the measurement report, and a redacted copy of the ledger. See [refs/README.md](refs/README.md).
+## Docs
 
-## Known caveats
+- [refs/ — experiment material](refs/README.md): answer key, measurement report, redacted ledger
+- [CHANGELOG.md](CHANGELOG.md): what changed from v0.1.0 to v0.2.1, and why
+- [personas/](personas/): the three personas and the shared output contract (edit them freely)
 
-- **The three units share one model.** "Independent" means independent *personas*, not independent weights. This is the single most important limitation, and the next step is to train one adapter per self.
-- **A single run is not a conclusion.** Byte-identical prompts have produced different tallies. Re-run before treating a result as a judgment.
-- **The instrument drifts.** The same `provider/model` name can be served by a different backend; verify the model before any cross-time comparison.
-- Failed units are recorded as rejections by default. The report says so at the top (`⚠ answered: N/3`) and the ledger keeps their raw output.
+## License
 
-MIT
+[MIT](LICENSE)
